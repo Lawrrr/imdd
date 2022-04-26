@@ -3,6 +3,9 @@ from .models import Movie
 
 
 class MovieSerializer(serializers.ModelSerializer):
+    genre = serializers.StringRelatedField(many=True, read_only=True)
+    director = serializers.StringRelatedField(read_only=True)
+
     class Meta:
         model = Movie
         fields = ['title', 'genre', 'director',
