@@ -23,7 +23,7 @@ class Director(models.Model):
 
 class Movie(models.Model):
     title = models.CharField(max_length=200, null=False)
-    genre = models.ManyToManyField(Genre, null=False)
+    genre = models.ManyToManyField(Genre)
     director = models.ForeignKey(Director, on_delete=models.CASCADE, null=False)
     release_date = models.DateField()
     created_on = models.DateTimeField(auto_now_add=True)
