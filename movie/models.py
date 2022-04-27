@@ -37,4 +37,4 @@ class Movie(models.Model):
         return self.title
 
     class Meta:
-        ordering = ['-created_on']
+        ordering = ['release_date']
