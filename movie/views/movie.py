@@ -72,3 +72,22 @@ def create(request):
             }
 
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+def delete(request, **kwargs):
+    try:
+        Movie.objects.get(id=kwargs['id']).delete()
+
+        data = {
+            "status": "success",
+            "message": "Movie successfully deleted!"
+        }
+    
+        return Response(data)
+    except:
+        data = {
+            "status": "error",
+            "message": "Failed to delete the movie."
+        }
+        
+        return Response(data, status=status.HTTP_400_BAD_REQUEST)
