@@ -23,8 +23,8 @@ def get(request, **kwargs):
             return Response(serializer.data)
         except:
             data = {
-                "status": "error",
-                "message": "Movie doesn't exist..."
+                'status': 'error',
+                'message': 'Movie doesn\'t exist...'
             }
 
             return Response(data, status=status.HTTP_404_NOT_FOUND)
@@ -51,24 +51,24 @@ def create(request):
                     
                 movieSerialize = MovieSerializer(newMovie)
                 data = {
-                    "status": "success",
-                    "message": "New movie added!",
-                    "movie": movieSerialize.data
+                    'status': 'success',
+                    'message': 'New movie added!',
+                    'movie': movieSerialize.data
                 }
 
                 return Response(data)
             else:
                 data = {
-                    "status": "error",
-                    "message": "Movie already in the database."
+                    'status': 'error',
+                    'message': 'Movie already in the database.'
                 }
 
                 return Response(data, status=status.HTTP_409_CONFLICT)
 
         except:
             data = {
-                "status": "error",
-                "message": "Movie not created."
+                'status': 'error',
+                'message': 'Movie not created.'
             }
 
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
@@ -79,15 +79,49 @@ def delete(request, **kwargs):
         Movie.objects.get(id=kwargs['id']).delete()
 
         data = {
-            "status": "success",
-            "message": "Movie successfully deleted!"
+            'status': 'success',
+            'message': 'Movie successfully deleted!'
         }
     
         return Response(data)
     except:
         data = {
-            "status": "error",
-            "message": "Failed to delete the movie."
+            'status': 'error',
+            'message': 'Failed to delete movie.'
         }
         
         return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT'])
+def update(request, **kwargs):
+    try:
+        updateData = request.data
+        movie = Movie.objects.get(id=kwargs['id'])
+        for key, value in updateData.items():
+            # For foreign keys(director & genre) I could create a different function.
+            if key == 'director':
+                getDirector = Director.objects.get(id=value)
+                movie.director = getDirector
+            elif key == 'genre':
+                movie.genre.set(value)
+            elif value:
+                setattr(movie, key, value)
+            else:
+                raise
+
+        movie.save()
+        serializeMovie = MovieSerializer(movie)
+        data = {
+            'status': 'success',
+            'message': 'Movie successfully updated',
+            'movie': serializeMovie.data
+        }
+
+        return Response(data)
+    except:
+        data = {
+            'status': 'error',
+            'message': 'Movie update failed'
+        }
+
+    return Response(data, status=status.HTTP_400_BAD_REQUEST)
