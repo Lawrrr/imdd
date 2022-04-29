@@ -93,8 +93,6 @@ if DEVELOPMENT_MODE is True:
         }
     }
 elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
-    if 'DATABASE_URL' in os.environ:
-        raise Exception('DATABASE_URL environment variable not defined')
     DATABASES = {
         'default': dj_database_url.parse(env('DATABASE_URL')),
     }
