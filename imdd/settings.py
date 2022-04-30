@@ -93,6 +93,8 @@ if DEVELOPMENT_MODE is True:
         }
     }
 elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
+    if env('DATABASE_URL') is None:
+        raise Exception('DATABASE_URL is not found.')
     DATABASES = {
         'default': dj_database_url.parse(env('DATABASE_URL')),
     }
